@@ -56,7 +56,7 @@ class App extends Component {
 
   removeToken = () => {
     localStorage.removeItem('token');
-  }
+  };
 
   resetForms = () => {
     this.setState({
@@ -99,7 +99,6 @@ class App extends Component {
   fireRegistration = (event, user) => {
     event.preventDefault();
     this.postRegistration(user);
-    this.toggleLogin();
     this.resetForms();
   };
 
@@ -109,6 +108,7 @@ class App extends Component {
       .then(res => {
         localStorage.setItem('token', res.data.token);
         this.setLogin();
+        this.props.history.push('/users');
       })
       .catch(error => this.setError(error.message));
   };
@@ -125,6 +125,7 @@ class App extends Component {
       .then(res => {
         localStorage.setItem('token', res.data.token);
         this.setLogin();
+        this.props.history.push('/users');
       })
       .catch(error => this.setError(error.message));
   };
@@ -145,7 +146,7 @@ class App extends Component {
   fireLogout = () => {
     this.setLogout();
     this.removeToken();
-  }
+  };
 
   render() {
     return (
@@ -176,26 +177,26 @@ class App extends Component {
 
         <Route
           path="/register"
-          render={routeProps =>
-              <Register
-                {...routeProps}
-                register={this.state.register}
-                handleRegisterChange={this.handleRegisterChange}
-                fireRegistration={this.fireRegistration}
-              />
-          }
+          render={routeProps => (
+            <Register
+              {...routeProps}
+              register={this.state.register}
+              handleRegisterChange={this.handleRegisterChange}
+              fireRegistration={this.fireRegistration}
+            />
+          )}
         />
 
         <Route
           path="/login"
-          render={routeProps =>
-              <Login
-                {...routeProps}
-                login={this.state.login}
-                handleLoginChange={this.handleLoginChange}
-                fireLogin={this.fireLogin}
-              />
-          }
+          render={routeProps => (
+            <Login
+              {...routeProps}
+              login={this.state.login}
+              handleLoginChange={this.handleLoginChange}
+              fireLogin={this.fireLogin}
+            />
+          )}
         />
 
         <Route
@@ -204,7 +205,11 @@ class App extends Component {
             !this.state.loggedIn || !localStorage.getItem('token') ? (
               <Redirect to="/login" />
             ) : (
-              <Users {...routeProps} users={this.state.users} fireLogout={this.fireLogout}/>
+              <Users
+                {...routeProps}
+                users={this.state.users}
+                fireLogout={this.fireLogout}
+              />
             )
           }
         />

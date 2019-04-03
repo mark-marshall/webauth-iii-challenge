@@ -61,7 +61,7 @@ class App extends Component {
     });
   };
 
-  fireRegistration = (event,user) => {
+  fireRegistration = (event, user) => {
     event.preventDefault();
     this.postRegistration(user);
     this.resetForms();
@@ -70,6 +70,21 @@ class App extends Component {
   postRegistration = user => {
     axios
       .post(registerUrl, user)
+      .then(res => {
+        localStorage.setItem('token', res.data.token);
+      })
+      .catch(error => this.setError(error.message));
+  };
+
+  fireLogin = (event, user) => {
+    event.preventDefault();
+    this.postLogin(user);
+    this.resetForms();
+  };
+
+  postLogin = user => {
+    axios
+      .post(loginUrl, user)
       .then(res => {
         localStorage.setItem('token', res.data.token);
       })
@@ -87,6 +102,7 @@ class App extends Component {
         <Login
           login={this.state.login}
           handleLoginChange={this.handleLoginChange}
+          fireLogin={this.fireLogin}
         />
       </div>
     );

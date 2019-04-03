@@ -25,7 +25,7 @@ export default function Register({ register, handleRegisterChange, fireRegistrat
         onChange={handleRegisterChange}
         type="text"
       />
-      <button onClick={event => fireRegistration(event,register)}>Register</button>
+      <button onClick={event => fireRegistration(event, register)}>Register</button>
     </div>
   );
 }

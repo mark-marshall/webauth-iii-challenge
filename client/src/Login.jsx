@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Register({ login, handleLoginChange }) {
+export default function Register({ login, handleLoginChange, fireLogin }) {
   return (
     <div>
       <h1>Login</h1>
@@ -18,7 +18,7 @@ export default function Register({ login, handleLoginChange }) {
         onChange={handleLoginChange}
         type="password"
       />
-      <button>Login</button>
+      <button onClick={event => fireLogin(event, login)}>Login</button>
     </div>
   );
 }

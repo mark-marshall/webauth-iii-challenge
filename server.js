@@ -2,9 +2,9 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 const db = require('./knexConfig');
+const generateToken = require('./tokenConfig');
 
 const server = express();
 
@@ -32,7 +32,8 @@ server.post(registerUrl, (req, res) => {
     db('users')
       .insert(user)
       .then(id => {
-        res.status(201).json(id);
+        const token = generateToken(user);
+        res.status(201).json({ message: `you are registered ${user.username}`, token });
       })
       .catch(err => {
         res.status(500).json({ message: 'the user could not be added' });
@@ -59,7 +60,8 @@ server.post(loginUrl, (req, res) => {
       .first()
       .then(user => {
         if (user && bcrypt.compareSync(password, user.password)) {
-          res.status(200).json({ message: `welcome in ${username}` });
+          const token = generateToken(user);
+          res.status(200).json({ message: `welcome in ${username}`, token });
         } else {
           res
             .status(401)
@@ -80,14 +82,14 @@ server.post(loginUrl, (req, res) => {
 a valid jwt in the Auhorization header
 */
 server.get(usersUrl, (req, res) => {
-db('users')
-.select('id', 'username', 'department')
-.then(users => {
-    res.status(200).json(users)
-})
-.catch(err => {
-    res.status(500).json({ message: 'the users could not be retrieved' });
-  });
-})
+  db('users')
+    .select('id', 'username', 'department')
+    .then(users => {
+      res.status(200).json(users);
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'the users could not be retrieved' });
+    });
+});
 
 module.exports = server;

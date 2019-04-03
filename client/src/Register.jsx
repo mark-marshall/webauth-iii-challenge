@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Register({ register, handleRegisterChange }) {
+export default function Register({ register, handleRegisterChange, fireRegistration }) {
   return (
     <div>
       <h1>Register</h1>
@@ -25,7 +25,7 @@ export default function Register({ register, handleRegisterChange }) {
         onChange={handleRegisterChange}
         type="text"
       />
-      <button>Register</button>
+      <button onClick={event => fireRegistration(event,register)}>Register</button>
     </div>
   );
 }

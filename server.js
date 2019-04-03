@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 
 const db = require('./knexConfig');
 const generateToken = require('./tokenConfig');
+const restricted = require('./middleware');
 
 const server = express();
 
@@ -81,7 +82,7 @@ server.post(loginUrl, (req, res) => {
 [GET] request needs to include: 
 a valid jwt in the Auhorization header
 */
-server.get(usersUrl, (req, res) => {
+server.get(usersUrl, restricted, (req, res) => {
   db('users')
     .select('id', 'username', 'department')
     .then(users => {

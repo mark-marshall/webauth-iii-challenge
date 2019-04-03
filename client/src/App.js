@@ -3,6 +3,7 @@ import axios from './axios';
 
 import Register from './Register';
 import Login from './Login';
+import Users from './Users';
 
 const registerUrl = 'http://localhost:4500/api/register';
 const loginUrl = 'http://localhost:4500/api/login';
@@ -123,6 +124,7 @@ class App extends Component {
           handleLoginChange={this.handleLoginChange}
           fireLogin={this.fireLogin}
         />
+        <Users users={this.state.users}/>
       </div>
     );
   }

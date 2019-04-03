@@ -46,6 +46,18 @@ class App extends Component {
     }
   };
 
+  setLogout = () => {
+    if (localStorage.getItem('token')) {
+      this.setState({
+        loggedIn: false,
+      });
+    }
+  };
+
+  removeToken = () => {
+    localStorage.removeItem('token');
+  }
+
   resetForms = () => {
     this.setState({
       register: {
@@ -130,9 +142,26 @@ class App extends Component {
     });
   };
 
+  fireLogout = () => {
+    this.setLogout();
+    this.removeToken();
+  }
+
   render() {
     return (
       <div className="App">
+        <nav>
+          <NavLink exact to="/register">
+            Register
+          </NavLink>
+          <NavLink exact to="/login">
+            Login
+          </NavLink>
+          <NavLink exact to="/users">
+            Users
+          </NavLink>
+        </nav>
+
         <Route
           exact
           path="/"
@@ -148,32 +177,24 @@ class App extends Component {
         <Route
           path="/register"
           render={routeProps =>
-            this.state.loggedIn && localStorage.getItem('token') ? (
-              <Redirect to="/users" />
-            ) : (
               <Register
                 {...routeProps}
                 register={this.state.register}
                 handleRegisterChange={this.handleRegisterChange}
                 fireRegistration={this.fireRegistration}
               />
-            )
           }
         />
 
         <Route
           path="/login"
           render={routeProps =>
-            this.state.loggedIn && localStorage.getItem('token') ? (
-              <Redirect to="/users" />
-            ) : (
               <Login
                 {...routeProps}
                 login={this.state.login}
                 handleLoginChange={this.handleLoginChange}
                 fireLogin={this.fireLogin}
               />
-            )
           }
         />
 
@@ -183,7 +204,7 @@ class App extends Component {
             !this.state.loggedIn || !localStorage.getItem('token') ? (
               <Redirect to="/login" />
             ) : (
-              <Users {...routeProps} users={this.state.users} />
+              <Users {...routeProps} users={this.state.users} fireLogout={this.fireLogout}/>
             )
           }
         />
@@ -192,4 +213,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withRouter(App);

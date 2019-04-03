@@ -5,6 +5,7 @@ import axios from './axios';
 import Register from './Register';
 import Login from './Login';
 import Users from './Users';
+import Logout from './Logout';
 
 const registerUrl = 'http://localhost:4500/api/register';
 const loginUrl = 'http://localhost:4500/api/login';
@@ -96,6 +97,14 @@ class App extends Component {
     });
   };
 
+  setLocalStore = (key, value) => {
+    localStorage.setItem(key, value);
+  };
+
+  setUserRedirect = page => {
+    this.props.history.push(`/${page}`);
+  };
+
   fireRegistration = (event, user) => {
     event.preventDefault();
     this.postRegistration(user);
@@ -106,7 +115,7 @@ class App extends Component {
     axios()
       .post(registerUrl, user)
       .then(res => {
-        localStorage.setItem('token', res.data.token);
+        this.setLocalStore('token', res.data.token);
         this.setLogin();
         this.props.history.push('/users');
       })
@@ -123,7 +132,7 @@ class App extends Component {
     axios()
       .post(loginUrl, user)
       .then(res => {
-        localStorage.setItem('token', res.data.token);
+        this.setLocalStore('token', res.data.token);
         this.setLogin();
         this.props.history.push('/users');
       })
@@ -161,6 +170,7 @@ class App extends Component {
           <NavLink exact to="/users">
             Users
           </NavLink>
+          <Logout fireLogout={this.fireLogout}/>
         </nav>
 
         <Route

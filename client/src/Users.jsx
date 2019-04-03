@@ -1,7 +1,5 @@
 import React from 'react';
 
-import Logout from './Logout';
-
 export default function Users({ users, fireLogout }) {
   return (
     <div>
@@ -14,7 +12,6 @@ export default function Users({ users, fireLogout }) {
           </li>
         ))}
       </ul>
-      <Logout fireLogout={fireLogout}/>
     </div>
   );
 }

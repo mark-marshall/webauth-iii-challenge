@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import axios from './axios';
+import { Route, Redirect, NavLink, withRouter } from 'react-router-dom';
 
+import axios from './axios';
 import Register from './Register';
 import Login from './Login';
 import Users from './Users';
@@ -22,6 +23,7 @@ class App extends Component {
     },
     users: [],
     error: '',
+    loggedIn: false,
   };
 
   componentDidMount() {
@@ -29,6 +31,20 @@ class App extends Component {
       this.grabUsers();
     }
   }
+
+  componentDidUpdate() {
+    if (localStorage.getItem('token') && !this.state.loggedIn) {
+      this.setLogin();
+    }
+  }
+
+  setLogin = () => {
+    if (localStorage.getItem('token')) {
+      this.setState({
+        loggedIn: true,
+      });
+    }
+  };
 
   resetForms = () => {
     this.setState({
@@ -71,6 +87,7 @@ class App extends Component {
   fireRegistration = (event, user) => {
     event.preventDefault();
     this.postRegistration(user);
+    this.toggleLogin();
     this.resetForms();
   };
 
@@ -79,6 +96,7 @@ class App extends Component {
       .post(registerUrl, user)
       .then(res => {
         localStorage.setItem('token', res.data.token);
+        this.setLogin();
       })
       .catch(error => this.setError(error.message));
   };
@@ -94,6 +112,7 @@ class App extends Component {
       .post(loginUrl, user)
       .then(res => {
         localStorage.setItem('token', res.data.token);
+        this.setLogin();
       })
       .catch(error => this.setError(error.message));
   };
@@ -114,17 +133,60 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Register
-          register={this.state.register}
-          handleRegisterChange={this.handleRegisterChange}
-          fireRegistration={this.fireRegistration}
+        <Route
+          exact
+          path="/"
+          render={() =>
+            !this.state.loggedIn && !localStorage.getItem('token') ? (
+              <Redirect to="/login" />
+            ) : (
+              <Redirect to="/users" />
+            )
+          }
         />
-        <Login
-          login={this.state.login}
-          handleLoginChange={this.handleLoginChange}
-          fireLogin={this.fireLogin}
+
+        <Route
+          path="/register"
+          render={routeProps =>
+            this.state.loggedIn && localStorage.getItem('token') ? (
+              <Redirect to="/users" />
+            ) : (
+              <Register
+                {...routeProps}
+                register={this.state.register}
+                handleRegisterChange={this.handleRegisterChange}
+                fireRegistration={this.fireRegistration}
+              />
+            )
+          }
         />
-        <Users users={this.state.users}/>
+
+        <Route
+          path="/login"
+          render={routeProps =>
+            this.state.loggedIn && localStorage.getItem('token') ? (
+              <Redirect to="/users" />
+            ) : (
+              <Login
+                {...routeProps}
+                login={this.state.login}
+                handleLoginChange={this.handleLoginChange}
+                fireLogin={this.fireLogin}
+              />
+            )
+          }
+        />
+
+        <Route
+          path="/users"
+          render={routeProps =>
+            !this.state.loggedIn || !localStorage.getItem('token') ? (
+              <Redirect to="/login" />
+            ) : (
+              <Users {...routeProps} users={this.state.users} />
+            )
+          }
+        />
       </div>
     );
   }

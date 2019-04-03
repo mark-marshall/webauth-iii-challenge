@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import axios from './axios';
 
 import Register from './Register';
 import Login from './Login';
@@ -22,6 +22,12 @@ class App extends Component {
     users: [],
     error: '',
   };
+
+  componentDidMount() {
+    if (localStorage.getItem('token')) {
+      this.grabUsers();
+    }
+  }
 
   resetForms = () => {
     this.setState({
@@ -68,7 +74,7 @@ class App extends Component {
   };
 
   postRegistration = user => {
-    axios
+    axios()
       .post(registerUrl, user)
       .then(res => {
         localStorage.setItem('token', res.data.token);
@@ -83,12 +89,25 @@ class App extends Component {
   };
 
   postLogin = user => {
-    axios
+    axios()
       .post(loginUrl, user)
       .then(res => {
         localStorage.setItem('token', res.data.token);
       })
       .catch(error => this.setError(error.message));
+  };
+
+  grabUsers = () => {
+    axios()
+      .get(usersUrl)
+      .then(res => this.setUsers(res.data))
+      .catch(error => this.setError(error.message));
+  };
+
+  setUsers = users => {
+    this.setState({
+      users,
+    });
   };
 
   render() {

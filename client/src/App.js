@@ -218,7 +218,7 @@ class App extends Component {
               <Users
                 {...routeProps}
                 users={this.state.users}
-                fireLogout={this.fireLogout}
+                grabUsers={this.grabUsers}
               />
             )
           }

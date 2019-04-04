@@ -1,6 +1,8 @@
 import React from 'react';
 
-export default function Users({ users, fireLogout }) {
+
+export default function Users({ users }) {
+
   return (
     <div>
       <h1>Users</h1>

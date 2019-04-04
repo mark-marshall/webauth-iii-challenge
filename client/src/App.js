@@ -27,11 +27,11 @@ class App extends Component {
     loggedIn: false,
   };
 
-  componentDidMount() {
-    if (localStorage.getItem('token')) {
-      this.grabUsers();
-    }
-  }
+  // componentDidMount() {
+  //   if (localStorage.getItem('token')) {
+  //     this.grabUsers();
+  //   }
+  // }
 
   componentDidUpdate() {
     if (localStorage.getItem('token') && !this.state.loggedIn) {
@@ -219,6 +219,7 @@ class App extends Component {
                 {...routeProps}
                 users={this.state.users}
                 grabUsers={this.grabUsers}
+                loggedIn={this.state.loggedIn}
               />
             )
           }

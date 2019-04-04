@@ -1,13 +1,19 @@
-import React from 'react';
+import React, { Component } from 'react';
 
+class Users extends Component {
 
-export default function Users({ users }) {
+  componentDidMount() {
+    if(localStorage.getItem('token') && this.props.loggedIn){
+      this.props.grabUsers();
+    }
+  }
 
-  return (
-    <div>
+  render(){
+    return (
+      <div>
       <h1>Users</h1>
       <ul>
-        {users.map(user => (
+        {this.props.users.map(user => (
           <li key={user.id}>
             <p>User: {user.username}</p>
             <p>Department: {user.department}</p>
@@ -15,5 +21,8 @@ export default function Users({ users }) {
         ))}
       </ul>
     </div>
-  );
+    )
+  }
 }
+
+export default Users;

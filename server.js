@@ -83,8 +83,11 @@ server.post(loginUrl, (req, res) => {
 a valid jwt in the Auhorization header
 */
 server.get(usersUrl, restricted, (req, res) => {
+  const department = req.decodedToken.department;
+
   db('users')
     .select('id', 'username', 'department')
+    .where({ department })
     .then(users => {
       res.status(200).json(users);
     })

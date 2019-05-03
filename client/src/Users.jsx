@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-export default function Users({ users, fireLogout }) {
-  return (
-    <div>
+class Users extends Component {
+
+  componentDidMount() {
+    if(localStorage.getItem('token') && this.props.loggedIn){
+      this.props.grabUsers();
+    }
+  }
+
+  render(){
+    return (
+      <div>
       <h1>Users</h1>
       <ul>
-        {users.map(user => (
+        {this.props.users.map(user => (
           <li key={user.id}>
             <p>User: {user.username}</p>
             <p>Department: {user.department}</p>
@@ -13,5 +21,8 @@ export default function Users({ users, fireLogout }) {
         ))}
       </ul>
     </div>
-  );
+    )
+  }
 }
+
+export default Users;
